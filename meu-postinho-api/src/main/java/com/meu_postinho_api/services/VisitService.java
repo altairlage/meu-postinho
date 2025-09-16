@@ -64,6 +64,14 @@ public class VisitService {
         Visit updatedVisit = visitRepository.findById(id)
                 .orElseThrow(() -> new VisitStatusNotUpdatedException(String.format("Visit not found with id: %d", id)));
 
+        boolean existsVisitForPatient = visitRepository.existsByPatient_IdAndVisitDate(updatedVisit.getPatient().getId(), updatedVisit.getVisitDate());
+
+        if (existsVisitForPatient) throw new PatientVisitConflictException("There's a visit already scheduled for this patient.");
+
+        boolean existsVisitForHealthAgent = visitRepository.existsByHealthAgent_IdAndVisitDate(updatedVisit.getHealthAgent().getId(), updatedVisit.getVisitDate());
+
+        if (existsVisitForHealthAgent) throw new HealthAgentVisitConflictException("There's a visit already scheduled for this health agent.");
+
         int update = visitRepository.updateVisitStatus(request.status().name(), id);
 
         if (update == 0) throw new VisitStatusNotUpdatedException("Visit status could not have been updated.");

@@ -10,13 +10,21 @@ public class NotificationMapper {
 
     public SendCreateVisitNotification toCreateVisitNotification(Visit visit) {
         return new SendCreateVisitNotification(
-                visit.getId()
+                visit.getPatient().getName(),
+                visit.getPatient().getTelephone(),
+                visit.getHealthAgent().getName(),
+                visit.getVisitDate(),
+                visit.getStatus()
         );
     }
 
     public SendUpdateVisitNotification toUpdateVisitNotification(Visit visit) {
         return new SendUpdateVisitNotification(
-                visit.getId()
+                visit.getPatient().getName(),
+                visit.getPatient().getTelephone(),
+                visit.getHealthAgent().getName(),
+                visit.getVisitDate(),
+                visit.getStatus()
         );
     }
 }
