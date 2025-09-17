@@ -1,6 +1,6 @@
 package com.fiap.meu_postinho_notifier.enums;
 
-public enum VisitationStatusEnum {
+public enum VisitStatusEnum {
     PENDENTE,
     CONCLUIDA,
     CANCELADA

@@ -1,6 +1,6 @@
 package com.fiap.meu_postinho_notifier.adapters.kafka;
 
-import com.fiap.meu_postinho_notifier.dtos.SendNotificationDTO;
+import com.fiap.meu_postinho_notifier.dtos.SendCreateVisitNotification;
 import com.fiap.meu_postinho_notifier.services.SendNotificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,12 +18,12 @@ public class KafkaConsumer {
         this.notificationService = notificationService;
     }
 
-    @KafkaListener(topics = "notify-visit", groupId = "notification_group")
-    public void notifyVisit(SendNotificationDTO sendNotificationDTO, Acknowledgment acknowledgment) {
+    @KafkaListener(topics = "notification")
+    public void notifyVisit(SendCreateVisitNotification sendCreateVisitNotification, Acknowledgment acknowledgment) {
         logger.info(LOG_TAG + "Notify visit event received!");
         try{
             logger.info(LOG_TAG + "Sending notification...");
-            notificationService.sendNotification(sendNotificationDTO);
+            notificationService.sendNotification(sendCreateVisitNotification);
             logger.info(LOG_TAG + "Notification sent successfully!");
             acknowledgment.acknowledge();
         } catch (Exception e){

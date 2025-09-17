@@ -3,7 +3,7 @@ package com.fiap.meu_postinho_notifier.adapters.kafka.configs;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fiap.meu_postinho_notifier.dtos.SendNotificationDTO;
+import com.fiap.meu_postinho_notifier.dtos.SendCreateVisitNotification;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,12 +37,12 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, SendNotificationDTO> consumerFactory() {
+    public ConsumerFactory<String, SendCreateVisitNotification> consumerFactory() {
         ObjectMapper objectMapper = new ObjectMapper()
                 .registerModule(new JavaTimeModule())
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        JsonDeserializer<SendNotificationDTO> deserializer = new JsonDeserializer<>(SendNotificationDTO.class, objectMapper);
+        JsonDeserializer<SendCreateVisitNotification> deserializer = new JsonDeserializer<>(SendCreateVisitNotification.class, objectMapper);
         deserializer.addTrustedPackages("*");
         deserializer.setUseTypeHeaders(false);
 
@@ -54,8 +54,8 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, SendNotificationDTO> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, SendNotificationDTO> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, SendCreateVisitNotification> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, SendCreateVisitNotification> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
 
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
