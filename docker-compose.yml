@@ -1,4 +1,15 @@
 services:
+  waha:
+    image: devlikeapro/waha:latest
+    container_name: waha
+    platform: linux/amd64
+    environment:
+      WHATSAPP_HOOK_URL: http://host.docker.internal:5678/webhook/webhook
+      WHATSAPP_DEFAULT_ENGINE: GOWS
+      WHATSAPP_HOOK_EVENTS: message
+    ports:
+      - "3000:3000"
+
   kafka-meu-postinho:
     image: apache/kafka:latest
     container_name: kafka-meu-postinho
@@ -36,6 +47,17 @@ services:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-meu-postinho:9092
     ports:
       - "8080:8080"
+
+  meu-postinho-notifier:
+    build:
+      context: ./meu-postinho-notifier
+    container_name: meu-postinho-notifier
+    depends_on:
+      - kafka-init
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-meu-postinho:9092
+    ports:
+      - "8081:8080"
 
 networks:
   default:
