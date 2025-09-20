@@ -49,6 +49,12 @@ public class Visit implements Serializable {
     @Enumerated(EnumType.STRING)
     private VisitStatusEnum status;
 
+    @Column(name = "fin_latitude")
+    private String finLatitude;
+
+    @Column(name = "fin_longitude")
+    private String finLongitude;
+
     public Visit(HealthAgent healthAgent, Patient patient, LocalDateTime visitDate, String reason, String observations, VisitStatusEnum status) {
         this.healthAgent = healthAgent;
         this.patient = patient;

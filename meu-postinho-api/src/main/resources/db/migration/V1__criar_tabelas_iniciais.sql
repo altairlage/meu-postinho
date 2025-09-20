@@ -21,6 +21,8 @@ CREATE TABLE visitas (
     motivo varchar(255),
     observacoes varchar(255),
     status varchar(50) default 'PENDENTE',
+    fin_latitude DECIMAL(10, 8),
+    fin_longitude DECIMAL(11, 8)
     constraint fk_id_agente_saude foreign key (id_agente_saude) references agentes_saude(id),
     constraint fk_id_paciente foreign key (id_paciente) references pacientes(id)
 );

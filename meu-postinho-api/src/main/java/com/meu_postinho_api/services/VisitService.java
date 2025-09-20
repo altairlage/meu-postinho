@@ -53,9 +53,9 @@ public class VisitService {
 
         Visit savedVisit = visitRepository.save(visit);
 
-        SendCreateVisitNotification notification = notificationMapper.toCreateVisitNotification(savedVisit);
-
-        kafkaProducer.sendCreateVisitMessage(notification);
+//        SendCreateVisitNotification notification = notificationMapper.toCreateVisitNotification(savedVisit);
+//
+//        kafkaProducer.sendCreateVisitMessage(notification);
 
         return visitMapper.toCreateVisitResponse(savedVisit);
     }
@@ -76,9 +76,9 @@ public class VisitService {
 
         if (update == 0) throw new VisitStatusNotUpdatedException("Visit status could not have been updated.");
 
-        SendUpdateVisitNotification notification = notificationMapper.toUpdateVisitNotification(updatedVisit);
-
-        kafkaProducer.sendUpdateVisitMessage(notification);
+//        SendUpdateVisitNotification notification = notificationMapper.toUpdateVisitNotification(updatedVisit);
+//
+//        kafkaProducer.sendUpdateVisitMessage(notification);
 
         return update;
     }
