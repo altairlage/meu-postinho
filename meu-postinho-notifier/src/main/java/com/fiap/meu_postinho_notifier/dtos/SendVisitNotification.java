@@ -11,7 +11,7 @@ public record SendVisitNotification(
         @JsonProperty("nomeAgenteSaude") String healthAgentName,
         @JsonProperty("dataVisita") LocalDateTime visitDate,
         @JsonProperty("statusVisita") VisitStatusEnum visitStatus,
-        @JsonProperty("motivoVisita") String reason,
-        @JsonProperty("observacoesVisita") String observations
+        @JsonProperty("motivoVisita") String visitReason,
+        @JsonProperty("observacoesVisita") String visitObservations
 ) {
 }

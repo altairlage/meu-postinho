@@ -57,12 +57,12 @@ public class SendNotificationService {
                     sendVisitNotification.healthAgentName());
         };
 
-        if(sendVisitNotification.reason() != null && !sendVisitNotification.reason().isEmpty()) {
-            result = result + "\nMotivo: " + sendVisitNotification.reason();
+        if(sendVisitNotification.visitReason() != null && !sendVisitNotification.visitReason().isEmpty()) {
+            result = result + "\nMotivo: " + sendVisitNotification.visitReason();
         }
 
-        if(sendVisitNotification.observations() != null && !sendVisitNotification.observations().isEmpty()) {
-            result = result + "\nObs: " + sendVisitNotification.observations();
+        if(sendVisitNotification.visitObservations() != null && !sendVisitNotification.visitObservations().isEmpty()) {
+            result = result + "\nObs: " + sendVisitNotification.visitObservations();
         }
 
         return result;
