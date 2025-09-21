@@ -1,6 +1,6 @@
 package com.fiap.meu_postinho_notifier.services;
 
-import com.fiap.meu_postinho_notifier.dtos.SendCreateVisitNotification;
+import com.fiap.meu_postinho_notifier.dtos.SendVisitNotification;
 import com.fiap.meu_postinho_notifier.dtos.SendNotificationHttpRequestDTO;
 import com.fiap.meu_postinho_notifier.dtos.SendNotificationHttpResponseDTO;
 import org.slf4j.Logger;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Service
 public class SendNotificationService {
@@ -20,15 +19,18 @@ public class SendNotificationService {
     private final Logger logger = LoggerFactory.getLogger(SendNotificationService.class);
     private final String LOG_TAG = "[SEND NOTIFICATION] - ";
 
-    public SendNotificationHttpResponseDTO sendNotification(SendCreateVisitNotification sendCreateVisitNotification) {
+    public SendNotificationHttpResponseDTO sendNotification(SendVisitNotification sendVisitNotification) {
+        logger.info(LOG_TAG + "Creating notification request...");
+
         SendNotificationHttpRequestDTO requestDTO = new SendNotificationHttpRequestDTO(
-                createChatId(sendCreateVisitNotification.telephone()),
+                createChatId(sendVisitNotification.telephone()),
                 null,
-                createMessage(sendCreateVisitNotification),
+                createMessage(sendVisitNotification),
                 true,
                 false,
                 "default");
 
+        logger.info(LOG_TAG + "Sending notification...");
         WebClient webClient = WebClient.create(wahaServiceUrl);
         return webClient.post()
                 .uri("/api/sendText")
@@ -38,21 +40,31 @@ public class SendNotificationService {
                 .block();
     }
 
-    private String createMessage(SendCreateVisitNotification sendCreateVisitNotification) {
-        return switch (sendCreateVisitNotification.visitStatus()) {
+    private String createMessage(SendVisitNotification sendVisitNotification) {
+        String result = switch (sendVisitNotification.visitStatus()) {
             case PENDENTE -> String.format("Olá, %s!\nSua visita foi agendada com sucesso para o dia %s, com o Agente de Saúde %s!",
-                    sendCreateVisitNotification.patientName(),
-                    normalizeDateAndTime(sendCreateVisitNotification.visitDate()),
-                    sendCreateVisitNotification.healthAgentName());
+                    sendVisitNotification.patientName(),
+                    normalizeDateAndTime(sendVisitNotification.visitDate()),
+                    sendVisitNotification.healthAgentName());
             case CONCLUIDA -> String.format("Olá, %s!\nSua visita do dia %s, com o Agente de Saúde %s foi concluída com sucesso!",
-                    sendCreateVisitNotification.patientName(),
-                    sendCreateVisitNotification.visitDate(),
-                    sendCreateVisitNotification.healthAgentName());
+                    sendVisitNotification.patientName(),
+                    sendVisitNotification.visitDate(),
+                    sendVisitNotification.healthAgentName());
             case CANCELADA -> String.format("Olá, %s!\nSua visita do dia %s foi cancelada.\nO Agente de Saúde %s entrará em contato para verificar sua disponibilidade para uma nova visita.\nAgradecemos a paciência!",
-                    sendCreateVisitNotification.patientName(),
-                    sendCreateVisitNotification.visitDate(),
-                    sendCreateVisitNotification.healthAgentName());
+                    sendVisitNotification.patientName(),
+                    sendVisitNotification.visitDate(),
+                    sendVisitNotification.healthAgentName());
         };
+
+        if(sendVisitNotification.reason() != null && !sendVisitNotification.reason().isEmpty()) {
+            result = result + "\nMotivo: " + sendVisitNotification.reason();
+        }
+
+        if(sendVisitNotification.observations() != null && !sendVisitNotification.observations().isEmpty()) {
+            result = result + "\nObs: " + sendVisitNotification.observations();
+        }
+
+        return result;
     }
 
     private String normalizeDateAndTime(LocalDateTime visitDate) {
@@ -72,7 +84,6 @@ public class SendNotificationService {
     }
 
     private String createChatId(String telephone) {
-        //Testar com número de alguem do grupo inserido pelo DB da API
         return "55" + telephone.replaceAll("\\D", "") + "@c.us";
     }
 }
