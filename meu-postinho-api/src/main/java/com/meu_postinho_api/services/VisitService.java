@@ -98,6 +98,10 @@ public class VisitService {
 
         Visit updatedVisit = visitRepository.save(visit);
 
+        SendVisitNotification notification = notificationMapper.toVisitNotification(updatedVisit);
+
+        kafkaProducer.sendVisitMessage(notification);
+
         return visitMapper.toFinishVisitResponse(updatedVisit);
     }
 
