@@ -3,8 +3,10 @@ package com.meu_postinho_api.services;
 import com.meu_postinho_api.dtos.SendCreateVisitNotification;
 import com.meu_postinho_api.dtos.SendUpdateVisitNotification;
 import com.meu_postinho_api.dtos.requests.CreateVisitRequest;
+import com.meu_postinho_api.dtos.requests.FinishVisitRequestDTO;
 import com.meu_postinho_api.dtos.requests.UpdateStatusRequestDTO;
 import com.meu_postinho_api.dtos.responses.CreateVisitResponseDTO;
+import com.meu_postinho_api.dtos.responses.FinishVisitResponseDTO;
 import com.meu_postinho_api.dtos.responses.VisitResponseDTO;
 import com.meu_postinho_api.entities.HealthAgent;
 import com.meu_postinho_api.entities.Patient;
@@ -81,6 +83,23 @@ public class VisitService {
 //        kafkaProducer.sendUpdateVisitMessage(notification);
 
         return update;
+    }
+
+    public FinishVisitResponseDTO finishVisit(FinishVisitRequestDTO request, Long id) {
+        Visit visit = visitRepository.findById(id)
+                .orElseThrow(() -> new VisitStatusNotUpdatedException(String.format("Visit not found with id: %d", id)));
+
+        if(visit.getStatus().equals(VisitStatusEnum.CONCLUIDA)){
+            throw new VisitStatusNotUpdatedException("Visit already finished.");
+        }
+
+        visit.setFinLatitude(request.latitude());
+        visit.setFinLongitude(request.longitude());
+        visit.setStatus(VisitStatusEnum.CONCLUIDA);
+
+        Visit updatedVisit = visitRepository.save(visit);
+
+        return visitMapper.toFinishVisitResponse(updatedVisit);
     }
 
     public List<VisitResponseDTO> getVisitsByStatus(VisitStatusEnum status) {

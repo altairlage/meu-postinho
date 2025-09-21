@@ -1,9 +1,9 @@
 package com.meu_postinho_api.dtos.requests;
 
-import com.meu_postinho_api.enums.VisitStatusEnum;
+import java.math.BigDecimal;
 
 public record FinishVisitRequestDTO(
-        VisitStatusEnum status,
-
+        BigDecimal latitude,
+        BigDecimal longitude
 ) {
 }
