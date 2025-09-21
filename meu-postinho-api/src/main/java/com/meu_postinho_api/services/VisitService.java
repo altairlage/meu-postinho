@@ -1,10 +1,11 @@
 package com.meu_postinho_api.services;
 
-import com.meu_postinho_api.dtos.SendCreateVisitNotification;
-import com.meu_postinho_api.dtos.SendUpdateVisitNotification;
+import com.meu_postinho_api.dtos.SendVisitNotification;
 import com.meu_postinho_api.dtos.requests.CreateVisitRequest;
+import com.meu_postinho_api.dtos.requests.FinishVisitRequestDTO;
 import com.meu_postinho_api.dtos.requests.UpdateStatusRequestDTO;
 import com.meu_postinho_api.dtos.responses.CreateVisitResponseDTO;
+import com.meu_postinho_api.dtos.responses.FinishVisitResponseDTO;
 import com.meu_postinho_api.dtos.responses.VisitResponseDTO;
 import com.meu_postinho_api.entities.HealthAgent;
 import com.meu_postinho_api.entities.Patient;
@@ -53,9 +54,9 @@ public class VisitService {
 
         Visit savedVisit = visitRepository.save(visit);
 
-        SendCreateVisitNotification notification = notificationMapper.toCreateVisitNotification(savedVisit);
+        SendVisitNotification notification = notificationMapper.toVisitNotification(savedVisit);
 
-        kafkaProducer.sendCreateVisitMessage(notification);
+        kafkaProducer.sendVisitMessage(notification);
 
         return visitMapper.toCreateVisitResponse(savedVisit);
     }
@@ -76,11 +77,28 @@ public class VisitService {
 
         if (update == 0) throw new VisitStatusNotUpdatedException("Visit status could not have been updated.");
 
-        SendUpdateVisitNotification notification = notificationMapper.toUpdateVisitNotification(updatedVisit);
+        SendVisitNotification notification = notificationMapper.toVisitNotification(updatedVisit);
 
-        kafkaProducer.sendUpdateVisitMessage(notification);
+        kafkaProducer.sendVisitMessage(notification);
 
         return update;
+    }
+
+    public FinishVisitResponseDTO finishVisit(FinishVisitRequestDTO request, Long id) {
+        Visit visit = visitRepository.findById(id)
+                .orElseThrow(() -> new VisitStatusNotUpdatedException(String.format("Visit not found with id: %d", id)));
+
+        if(visit.getStatus().equals(VisitStatusEnum.CONCLUIDA)){
+            throw new VisitStatusNotUpdatedException("Visit already finished.");
+        }
+
+        visit.setFinLatitude(request.latitude());
+        visit.setFinLongitude(request.longitude());
+        visit.setStatus(VisitStatusEnum.CONCLUIDA);
+
+        Visit updatedVisit = visitRepository.save(visit);
+
+        return visitMapper.toFinishVisitResponse(updatedVisit);
     }
 
     public List<VisitResponseDTO> getVisitsByStatus(VisitStatusEnum status) {

@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -48,6 +49,12 @@ public class Visit implements Serializable {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private VisitStatusEnum status;
+
+    @Column(name = "fin_latitude")
+    private BigDecimal finLatitude;
+
+    @Column(name = "fin_longitude")
+    private BigDecimal finLongitude;
 
     public Visit(HealthAgent healthAgent, Patient patient, LocalDateTime visitDate, String reason, String observations, VisitStatusEnum status) {
         this.healthAgent = healthAgent;
