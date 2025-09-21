@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
 
                         if (response.ok) {
-                            alert('Visita confirmada com sucesso!');
+                            alert('Visita finalizada com sucesso!');
                             console.log('Resposta da API:', await response.json());
                         } else {
                             alert('Erro ao finalizar a visita. Verifique o console.');
