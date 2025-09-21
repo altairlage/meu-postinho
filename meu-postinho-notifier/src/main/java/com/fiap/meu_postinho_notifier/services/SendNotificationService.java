@@ -19,7 +19,7 @@ public class SendNotificationService {
     private final Logger logger = LoggerFactory.getLogger(SendNotificationService.class);
     private final String LOG_TAG = "[SEND NOTIFICATION] - ";
 
-    public SendNotificationHttpResponseDTO sendNotification(SendVisitNotification sendVisitNotification) {
+    public void sendNotification(SendVisitNotification sendVisitNotification) {
         logger.info(LOG_TAG + "Creating notification request...");
 
         SendNotificationHttpRequestDTO requestDTO = new SendNotificationHttpRequestDTO(
@@ -32,12 +32,13 @@ public class SendNotificationService {
 
         logger.info(LOG_TAG + "Sending notification...");
         WebClient webClient = WebClient.create(wahaServiceUrl);
-        return webClient.post()
+        webClient.post()
                 .uri("/api/sendText")
                 .bodyValue(requestDTO)
                 .retrieve()
                 .bodyToMono(SendNotificationHttpResponseDTO.class)
                 .block();
+        logger.info(LOG_TAG + "Notification sent successfully!");
     }
 
     private String createMessage(SendVisitNotification sendVisitNotification) {
