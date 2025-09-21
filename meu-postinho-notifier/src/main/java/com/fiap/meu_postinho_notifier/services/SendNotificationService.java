@@ -3,6 +3,7 @@ package com.fiap.meu_postinho_notifier.services;
 import com.fiap.meu_postinho_notifier.dtos.SendVisitNotification;
 import com.fiap.meu_postinho_notifier.dtos.SendNotificationHttpRequestDTO;
 import com.fiap.meu_postinho_notifier.dtos.SendNotificationHttpResponseDTO;
+import com.fiap.meu_postinho_notifier.enums.VisitStatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,12 +58,14 @@ public class SendNotificationService {
                     sendVisitNotification.healthAgentName());
         };
 
-        if(sendVisitNotification.visitReason() != null && !sendVisitNotification.visitReason().isEmpty()) {
-            result = result + "\nMotivo: " + sendVisitNotification.visitReason();
-        }
+        if (sendVisitNotification.visitStatus().equals(VisitStatusEnum.PENDENTE)){
+            if(sendVisitNotification.visitReason() != null && !sendVisitNotification.visitReason().isEmpty()) {
+                result = result + "\nMotivo: " + sendVisitNotification.visitReason();
+            }
 
-        if(sendVisitNotification.visitObservations() != null && !sendVisitNotification.visitObservations().isEmpty()) {
-            result = result + "\nObs: " + sendVisitNotification.visitObservations();
+            if(sendVisitNotification.visitObservations() != null && !sendVisitNotification.visitObservations().isEmpty()) {
+                result = result + "\nObs: " + sendVisitNotification.visitObservations();
+            }
         }
 
         return result;

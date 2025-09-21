@@ -4,9 +4,9 @@ INSERT INTO agentes_saude (nome, telefone, numero_registro, unidade_saude) VALUE
 ('Ana Costa', '(27) 97777-3333', 'AG003', 'UBS Litoral');
 
 INSERT INTO pacientes (nome, telefone, email) VALUES
-('Carlos Almeida', '(27) 99999-1001', 'carlos.almeida@email.com'),
-('Fernanda Souza', '(27) 99999-1002', 'fernanda.souza@email.com'),
-('Ricardo Santos', '(27) 99999-1003', 'ricardo.santos@email.com'),
+('Carlos Almeida', '(35) 9125-2515', 'carlos.almeida@email.com'),
+('Fernanda Souza', '(35) 9125-2515', 'fernanda.souza@email.com'),
+('Ricardo Santos', '(35) 9125-2515', 'ricardo.santos@email.com'),
 ('Juliana Rocha', '(27) 99999-1004', 'juliana.rocha@email.com'),
 ('Paulo Henrique', '(27) 99999-1005', 'paulo.henrique@email.com'),
 ('Beatriz Lima', '(27) 99999-1006', 'beatriz.lima@email.com'),
