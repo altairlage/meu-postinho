@@ -1,7 +1,6 @@
 package com.meu_postinho_api.services;
 
-import com.meu_postinho_api.dtos.SendCreateVisitNotification;
-import com.meu_postinho_api.dtos.SendUpdateVisitNotification;
+import com.meu_postinho_api.dtos.SendVisitNotification;
 import com.meu_postinho_api.dtos.requests.CreateVisitRequest;
 import com.meu_postinho_api.dtos.requests.FinishVisitRequestDTO;
 import com.meu_postinho_api.dtos.requests.UpdateStatusRequestDTO;
@@ -55,9 +54,9 @@ public class VisitService {
 
         Visit savedVisit = visitRepository.save(visit);
 
-//        SendCreateVisitNotification notification = notificationMapper.toCreateVisitNotification(savedVisit);
-//
-//        kafkaProducer.sendCreateVisitMessage(notification);
+        SendVisitNotification notification = notificationMapper.toVisitNotification(savedVisit);
+
+        kafkaProducer.sendVisitMessage(notification);
 
         return visitMapper.toCreateVisitResponse(savedVisit);
     }
@@ -78,9 +77,9 @@ public class VisitService {
 
         if (update == 0) throw new VisitStatusNotUpdatedException("Visit status could not have been updated.");
 
-//        SendUpdateVisitNotification notification = notificationMapper.toUpdateVisitNotification(updatedVisit);
-//
-//        kafkaProducer.sendUpdateVisitMessage(notification);
+        SendVisitNotification notification = notificationMapper.toVisitNotification(updatedVisit);
+
+        kafkaProducer.sendVisitMessage(notification);
 
         return update;
     }
