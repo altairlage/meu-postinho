@@ -50,11 +50,11 @@ public class SendNotificationService {
                     sendVisitNotification.healthAgentName());
             case CONCLUIDA -> String.format("Olá, %s!\nSua visita do dia %s, com o Agente de Saúde %s foi concluída com sucesso!",
                     sendVisitNotification.patientName(),
-                    sendVisitNotification.visitDate(),
+                    normalizeDateAndTime(sendVisitNotification.visitDate()),
                     sendVisitNotification.healthAgentName());
             case CANCELADA -> String.format("Olá, %s!\nSua visita do dia %s foi cancelada.\nO Agente de Saúde %s entrará em contato para verificar sua disponibilidade para uma nova visita.\nAgradecemos a paciência!",
                     sendVisitNotification.patientName(),
-                    sendVisitNotification.visitDate(),
+                    normalizeDateAndTime(sendVisitNotification.visitDate()),
                     sendVisitNotification.healthAgentName());
         };
 
